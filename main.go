@@ -7,6 +7,8 @@ import (
     "io/ioutil"
     "log"
     "os"
+    "os/user"
+    "path"
     "text/tabwriter"
     "time"
 
@@ -36,7 +38,9 @@ var allUsers bool
 func init() {
     conf = new(Conf)
 
-    data, err := ioutil.ReadFile("config.yaml")
+    configFileLocation := getConfigFileLocation()
+
+    data, err := ioutil.ReadFile(configFileLocation)
     if err != nil {
         log.Fatalln("Could not open config.yaml. Err: ", err.Error())
     }
@@ -54,6 +58,28 @@ func init() {
     if flag.NArg() > 0 {
         userNames = flag.Args()
     }
+}
+
+func getConfigFileLocation() string {
+    configName := "config.yaml"
+    currentUser, err := user.Current()
+    if err != nil {
+        log.Fatalln("Could find your home dir")
+    }
+
+    toCheck := []string{
+        configName,
+        path.Join(currentUser.HomeDir, "config.yaml"),
+    }
+
+    for _, possibleConfigLocation := range toCheck {
+        if _, err := os.Stat(possibleConfigLocation); err == nil {
+            return possibleConfigLocation
+        }
+    }
+
+    log.Fatalln("Could find config file config.yaml in local or home dir")
+    return ""
 }
 
 func updateForUsers(users []codebase.User) {
