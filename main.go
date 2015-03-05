@@ -25,7 +25,7 @@ type Conf struct {
         Project string
     }
 
-    Mapping codebase.ChangeMapping
+    Mapping ChangeMapping
 }
 
 var conf *Conf
@@ -89,7 +89,7 @@ func updateForUser(w io.Writer, user codebase.User) bool {
     maxDays := 5
     nothingNew := false
     for len(events) == 0 {
-        events = api.Activities(standUpTime, user)
+        events = api.Activities(standUpTime, user, conf.Mapping)
 
         if len(events) == 0 {
             nothingNew = true
