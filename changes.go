@@ -11,13 +11,18 @@ type ChangeMapping struct {
 }
 
 func (c ChangeMapping) MapChange(field, before, after string) (description string) {
-    change := fmt.Sprintf("%s -> %s", before, after)
+    raw_change := fmt.Sprintf("%s -> %s", before, after)
 
+    change := ""
     switch {
     case field == codebase.CHANGE_STATUS:
-        change = c.Status[change]
+        change = c.Status[raw_change]
     case field == codebase.CHANGE_MILESTONE:
         change = fmt.Sprintf("Moved ticket to %s", after)
+    }
+
+    if includeRawChange && change == "" {
+        change = raw_change
     }
 
     return change

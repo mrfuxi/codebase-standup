@@ -34,6 +34,7 @@ var conf *Conf
 var api *codebase.CodeBaseAPI
 var userNames []string
 var allUsers bool
+var includeRawChange bool
 
 func init() {
     conf = new(Conf)
@@ -53,6 +54,7 @@ func init() {
     api = codebase.NewCodeBaseClient(conf.Auth.Username, conf.Auth.APIKey, conf.General.Project)
 
     flag.BoolVar(&allUsers, "all", false, "Show all users")
+    flag.BoolVar(&includeRawChange, "raw", false, "Show raw change when no description is available")
     flag.Parse()
 
     if flag.NArg() > 0 {
