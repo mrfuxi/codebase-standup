@@ -16,6 +16,8 @@ func (c ChangeMapping) MapChange(field, before, after string) (description strin
     switch {
     case field == codebase.CHANGE_STATUS:
         change = c.Status[change]
+    case field == codebase.CHANGE_MILESTONE:
+        change = fmt.Sprintf("Moved ticket to %s", after)
     }
 
     return change
