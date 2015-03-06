@@ -35,6 +35,7 @@ var api *codebase.CodeBaseAPI
 var userNames []string
 var allUsers bool
 var includeRawChange bool
+var projectOverride string
 
 func init() {
     conf = new(Conf)
@@ -51,15 +52,21 @@ func init() {
         log.Fatalln("Config error:", err.Error())
     }
 
-    api = codebase.NewCodeBaseClient(conf.Auth.Username, conf.Auth.APIKey, conf.General.Project)
-
     flag.BoolVar(&allUsers, "all", false, "Show all users")
     flag.BoolVar(&includeRawChange, "raw", false, "Show raw change when no description is available")
+    flag.StringVar(&projectOverride, "project", "", "Project to use")
     flag.Parse()
 
     if flag.NArg() > 0 {
         userNames = flag.Args()
     }
+
+    project := conf.General.Project
+    if projectOverride != "" {
+        project = projectOverride
+    }
+
+    api = codebase.NewCodeBaseClient(conf.Auth.Username, conf.Auth.APIKey, project)
 }
 
 func getConfigFileLocation() string {
