@@ -71,14 +71,21 @@ func init() {
 
 func getConfigFileLocation() string {
     configName := "config.yaml"
+    homeDir := ""
     currentUser, err := user.Current()
     if err != nil {
-        log.Fatalln("Could find your home dir")
+        homeDir = os.Getenv("HOME")
+    } else {
+        homeDir = currentUser.HomeDir
+    }
+
+    if homeDir == "" {
+        log.Fatalln("Could find your home dir with user or $HOME. User error:", err)
     }
 
     toCheck := []string{
         configName,
-        path.Join(currentUser.HomeDir, "config.yaml"),
+        path.Join(homeDir, "config.yaml"),
     }
 
     for _, possibleConfigLocation := range toCheck {
