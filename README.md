@@ -32,6 +32,7 @@ auth:
 general:
   company: company-name
   project: project-name
+  standuptime: 11
 
 mapping:
   status:

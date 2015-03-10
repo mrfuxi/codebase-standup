@@ -23,8 +23,9 @@ type Conf struct {
     }
 
     General struct {
-        Company string
-        Project string
+        Company     string
+        Project     string
+        StandupTime int
     }
 
     Mapping ChangeMapping
@@ -54,7 +55,7 @@ func init() {
 
     flag.BoolVar(&allUsers, "all", false, "Show all users")
     flag.BoolVar(&includeRawChange, "raw", false, "Show raw change when no description is available")
-    flag.StringVar(&projectOverride, "project", "", "Project to use")
+    flag.StringVar(&projectOverride, "project", "", "Project to use (overrides config)")
     flag.Parse()
 
     if flag.NArg() > 0 {
@@ -114,7 +115,7 @@ func updateForUsers(users []codebase.User) {
 }
 
 func updateForUser(w io.Writer, user codebase.User) bool {
-    standUpTime := time.Now().Truncate(time.Hour * 24).Add(time.Hour * 11)
+    standUpTime := time.Now().Truncate(time.Hour * 24).Add(time.Hour * time.Duration(conf.General.StandupTime))
     if standUpTime.After(time.Now()) {
         // It's a morning before standup
         daysBack := -1 // Yesterday
@@ -133,13 +134,17 @@ func updateForUser(w io.Writer, user codebase.User) bool {
     for len(events) == 0 {
         events = api.Activities(standUpTime, user, conf.Mapping)
 
+        if standUpTime.Weekday() != time.Saturday && standUpTime.Weekday() != time.Sunday {
+            maxDays--
+        }
+
+        if maxDays == 0 {
+            return false
+        }
+
         if len(events) == 0 {
             nothingNew = true
             standUpTime = standUpTime.Add(time.Hour * -24)
-        }
-
-        if maxDays--; maxDays == 0 {
-            return false
         }
     }
 
