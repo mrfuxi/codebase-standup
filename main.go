@@ -154,7 +154,7 @@ func updateForUser(w io.Writer, user codebase.User) bool {
 
     fmt.Fprintln(w, user)
     for _, event := range events {
-        fmt.Fprintln(w, event.Day(), "\t", event.Raw.Changes.Changes(conf.Mapping), "\t", event.Raw.Subject, "\t", event.TicketUrl(conf.General.Company))
+        fmt.Fprintln(w, event.Day(), "\t", event.Changes(conf.Mapping), "\t", event.Raw.Subject, "\t", event.TicketUrl(conf.General.Company))
     }
 
     return true

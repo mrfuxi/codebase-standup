@@ -35,6 +35,7 @@ general:
   standuptime: 11
 
 mapping:
+  newticket:                               Wow new thing
   status:
     New -> In Progress:                    Working on
 ```
