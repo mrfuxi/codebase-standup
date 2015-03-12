@@ -28,6 +28,10 @@ func (c ChangeMapping) MapChange(field, before, after string) (description strin
         change = fmt.Sprintf("Moved ticket to %s", after)
     case field == codebase.CHANGE_NEW_TICKET:
         change = c.NewTicket
+    case field == codebase.CHANGE_CATEGORY:
+        change = fmt.Sprintf("Categorised as %s", after)
+    case field == codebase.CHANGE_PRIORITY:
+        change = fmt.Sprintf("Prioritised as %s", after)
     }
 
     if includeRawChange && change == "" {
