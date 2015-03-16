@@ -29,7 +29,11 @@ func (c ChangeMapping) MapChange(field, before, after string) (description strin
     case field == codebase.CHANGE_NEW_TICKET:
         change = c.NewTicket
     case field == codebase.CHANGE_CATEGORY:
-        change = fmt.Sprintf("Categorised as %s", after)
+        if after != "" {
+            change = fmt.Sprintf("Categorised as %s", after)
+        } else {
+            change = fmt.Sprintf("Removed categorisation as %s", before)
+        }
     case field == codebase.CHANGE_PRIORITY:
         change = fmt.Sprintf("Prioritised as %s", after)
     }

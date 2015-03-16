@@ -33,7 +33,7 @@ type Conf struct {
 
 var conf *Conf
 var api *codebase.CodeBaseAPI
-var userNames []string
+var firstNames []string
 var allUsers bool
 var includeRawChange bool
 var projectOverride string
@@ -59,7 +59,7 @@ func init() {
     flag.Parse()
 
     if flag.NArg() > 0 {
-        userNames = flag.Args()
+        firstNames = flag.Args()
     }
 
     project := conf.General.Project
@@ -163,9 +163,9 @@ func updateForUser(w io.Writer, user codebase.User) bool {
 func relevantUsers() (users []codebase.User) {
     if allUsers {
         users = api.UsersInProject()
-    } else if len(userNames) != 0 {
-        for _, userName := range userNames {
-            users = append(users, api.User(userName))
+    } else if len(firstNames) != 0 {
+        for _, firstName := range firstNames {
+            users = append(users, api.User(firstName, "", ""))
         }
     } else {
         users = append(users, api.AuthUser())
