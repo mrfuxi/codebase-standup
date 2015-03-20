@@ -37,6 +37,8 @@ func (c ChangeMapping) MapChange(field, before, after string) (description strin
         }
     case field == codebase.CHANGE_PRIORITY:
         change = fmt.Sprintf("Prioritised as %s", after)
+    case field == codebase.CHANGE_ASSIGNEE:
+        change = fmt.Sprintf("Assigned to %s", after)
     }
 
     if c.IncludeRawChange && change == "" {
