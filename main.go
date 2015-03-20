@@ -14,6 +14,8 @@ import (
 
     "github.com/mrfuxi/go-codebase/codebase"
     "gopkg.in/yaml.v2"
+
+    "github.com/mrfuxi/codebase-standup/descriptor"
 )
 
 type Conf struct {
@@ -28,14 +30,13 @@ type Conf struct {
         StandupTime int
     }
 
-    Mapping ChangeMapping
+    Mapping descriptor.ChangeMapping
 }
 
 var conf *Conf
 var api *codebase.CodeBaseAPI
 var firstNames []string
 var allUsers bool
-var includeRawChange bool
 var projectOverride string
 
 func init() {
@@ -54,7 +55,7 @@ func init() {
     }
 
     flag.BoolVar(&allUsers, "all", false, "Show all users")
-    flag.BoolVar(&includeRawChange, "raw", false, "Show raw change when no description is available")
+    flag.BoolVar(&conf.Mapping.IncludeRawChange, "raw", false, "Show raw change when no description is available")
     flag.StringVar(&projectOverride, "project", "", "Project to use (overrides config)")
     flag.Parse()
 

@@ -1,4 +1,4 @@
-package main
+package descriptor
 
 import (
     "fmt"
@@ -7,8 +7,9 @@ import (
 )
 
 type ChangeMapping struct {
-    Status    map[string]string
-    NewTicket string
+    Status           map[string]string
+    NewTicket        string
+    IncludeRawChange bool
 }
 
 func (c ChangeMapping) MapChange(field, before, after string) (description string) {
@@ -38,7 +39,7 @@ func (c ChangeMapping) MapChange(field, before, after string) (description strin
         change = fmt.Sprintf("Prioritised as %s", after)
     }
 
-    if includeRawChange && change == "" {
+    if c.IncludeRawChange && change == "" {
         change = raw_change
     }
 
